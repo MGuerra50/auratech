@@ -1,26 +1,124 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050506;
+  --surface: #0f0f11;
+  --surface-elevated: #16161a;
+  --border: #2a2a2e;
+  --border-subtle: #1c1c1f;
+  --foreground: #f4f4f5;
+  --muted: #71717a;
+  --accent: #22d3ee;
+  --accent-hover: #06b6d4;
+  --accent-muted: rgba(34, 211, 238, 0.12);
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-muted: var(--accent-muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-display: var(--font-syne);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--accent-muted);
+  color: var(--foreground);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--background);
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.hero-bento-grid {
+  display: grid;
+  gap: 0.75rem;
+  min-height: 420px;
+}
+
+@media (min-width: 1024px) {
+  .hero-bento-grid {
+    gap: 1rem;
+    min-height: 520px;
+  }
+}
+
+.hero-grid-initial {
+  grid-template:
+    "main" auto
+    "topRight" 180px
+    "bottomRight" 180px
+    / 1fr;
+}
+
+.hero-grid-topExpanded {
+  grid-template:
+    "topFull" 200px
+    "mainBottom" 180px
+    "bottomBottom" 180px
+    / 1fr;
+}
+
+.hero-grid-bottomSplit {
+  grid-template:
+    "topFull" 200px
+    "mainSplit" 200px
+    "splitA" 140px
+    "splitB" 140px
+    / 1fr;
+}
+
+@media (min-width: 1024px) {
+  .hero-grid-initial {
+    grid-template:
+      "main topRight" 1fr
+      "main bottomRight" 1fr
+      / 2fr 1fr;
+  }
+
+  .hero-grid-topExpanded {
+    grid-template:
+      "topFull topFull" 1fr
+      "mainBottom bottomBottom" 1fr
+      / 1fr 1fr;
+  }
+
+  .hero-grid-bottomSplit {
+    grid-template:
+      "topFull topFull" 1fr
+      "mainSplit splitA" 1fr
+      "mainSplit splitB" 1fr
+      / 1.5fr 1fr;
+  }
 }
