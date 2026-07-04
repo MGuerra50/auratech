@@ -1,4 +1,4 @@
-import type { HeroLayout, HeroSlide } from "@/types/hero";
+import type { HeroBlockImages, HeroLayout, HeroSlide } from "@/types/hero";
 
 const slideContent = [
   {
@@ -21,30 +21,43 @@ const slideContent = [
   },
 ] as const;
 
-function getBlocksForLayout(
+function getDefaultBlockImages(slideIndex: number): HeroBlockImages {
+  const prefix = `slide-${slideIndex + 1}`;
+
+  return {
+    main: `/hero/${prefix}-main.svg`,
+    topRight: `/hero/${prefix}-top.svg`,
+    bottomRight: `/hero/${prefix}-bottom.svg`,
+  };
+}
+
+export function getBlocksForLayout(
   slideIndex: number,
   layout: HeroLayout,
+  images?: HeroBlockImages,
 ): HeroSlide["blocks"] {
-  const prefix = `slide-${slideIndex + 1}`;
+  const blockImages = images ?? getDefaultBlockImages(slideIndex);
+  const bottomSplitBottom =
+    images?.bottomRight ?? `/hero/slide-${slideIndex + 1}-bottom-a.svg`;
 
   if (layout === "initial") {
     return [
       {
         id: "main",
-        image: `/hero/${prefix}-main.svg`,
+        image: blockImages.main,
         gridArea: "main",
         imageEffect: "zoomIn",
       },
       {
         id: "topRight",
-        image: `/hero/${prefix}-top.svg`,
+        image: blockImages.topRight,
         gridArea: "topRight",
         imageEffect: "panRight",
         label: "Destaque",
       },
       {
         id: "bottomRight",
-        image: `/hero/${prefix}-bottom.svg`,
+        image: blockImages.bottomRight,
         gridArea: "bottomRight",
         imageEffect: "zoomOut",
         label: "Novo",
@@ -56,20 +69,20 @@ function getBlocksForLayout(
     return [
       {
         id: "topRight",
-        image: `/hero/${prefix}-top.svg`,
+        image: blockImages.topRight,
         gridArea: "topFull",
         imageEffect: "panRight",
         label: "Destaque",
       },
       {
         id: "main",
-        image: `/hero/${prefix}-main.svg`,
+        image: blockImages.main,
         gridArea: "mainBottom",
         imageEffect: "zoomIn",
       },
       {
         id: "bottomRight",
-        image: `/hero/${prefix}-bottom.svg`,
+        image: blockImages.bottomRight,
         gridArea: "bottomBottom",
         imageEffect: "zoomOut",
         label: "Novo",
@@ -80,20 +93,20 @@ function getBlocksForLayout(
   return [
     {
       id: "topRight",
-      image: `/hero/${prefix}-top.svg`,
+      image: blockImages.topRight,
       gridArea: "top",
       imageEffect: "panRight",
       label: "Destaque",
     },
     {
       id: "main",
-      image: `/hero/${prefix}-main.svg`,
+      image: blockImages.main,
       gridArea: "main",
       imageEffect: "zoomIn",
     },
     {
       id: "bottomRight",
-      image: `/hero/${prefix}-bottom-a.svg`,
+      image: bottomSplitBottom,
       gridArea: "bottomA",
       imageEffect: "zoomOut",
       label: "Novo",

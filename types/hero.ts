@@ -17,6 +17,13 @@ export interface HeroSlide {
   title: string;
   subtitle: string;
   ctaLabel: string;
+  ctaHref?: string;
   layout: HeroLayout;
   blocks: HeroBlockConfig[];
+}
+
+export interface HeroBlockImages {
+  main: string;
+  topRight: string;
+  bottomRight: string;
 }

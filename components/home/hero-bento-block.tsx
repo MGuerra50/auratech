@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -12,6 +13,7 @@ interface HeroBentoBlockProps {
   title?: string;
   subtitle?: string;
   ctaLabel?: string;
+  ctaHref?: string;
   isMain?: boolean;
   className?: string;
 }
@@ -21,6 +23,7 @@ export function HeroBentoBlock({
   title,
   subtitle,
   ctaLabel,
+  ctaHref,
   isMain = false,
   className,
 }: HeroBentoBlockProps) {
@@ -80,7 +83,16 @@ export function HeroBentoBlock({
             )}
             {ctaLabel && (
               <div className="mt-4">
-                <Button size="md">{ctaLabel}</Button>
+                {ctaHref ? (
+                  <Link
+                    href={ctaHref}
+                    className="inline-flex h-10 items-center justify-center rounded-lg bg-accent px-4 text-sm font-medium text-background shadow-[0_0_20px_rgba(34,211,238,0.15)] transition-colors hover:bg-accent-hover"
+                  >
+                    {ctaLabel}
+                  </Link>
+                ) : (
+                  <Button size="md">{ctaLabel}</Button>
+                )}
               </div>
             )}
           </>

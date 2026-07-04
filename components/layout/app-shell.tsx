@@ -11,7 +11,6 @@ interface AppShellProps {
 }
 
 export function AppShell({ children }: AppShellProps) {
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   return (
@@ -19,14 +18,11 @@ export function AppShell({ children }: AppShellProps) {
       <Sidebar />
 
       <div className="flex min-h-screen flex-1 flex-col">
-        <Header
-          onCartOpen={() => setIsCartOpen(true)}
-          onMobileNavOpen={() => setIsMobileNavOpen(true)}
-        />
+        <Header onMobileNavOpen={() => setIsMobileNavOpen(true)} />
         <main className="flex flex-1 flex-col">{children}</main>
       </div>
 
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <CartDrawer />
       <MobileNav
         isOpen={isMobileNavOpen}
         onClose={() => setIsMobileNavOpen(false)}

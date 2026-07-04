@@ -49,9 +49,20 @@ const products = [
 
 products.forEach(([file, label], i) => {
   const [a, b] = colors[i % colors.length];
+
   fs.writeFileSync(
     path.join(productsDir, `${file}.svg`),
     svg(label, a, b, 600, 450),
+  );
+
+  fs.writeFileSync(
+    path.join(productsDir, `${file}-2.svg`),
+    svg(`${label} 2`, colors[(i + 1) % colors.length][0], colors[(i + 1) % colors.length][1], 600, 450),
+  );
+
+  fs.writeFileSync(
+    path.join(productsDir, `${file}-3.svg`),
+    svg(`${label} 3`, colors[(i + 2) % colors.length][0], colors[(i + 2) % colors.length][1], 600, 450),
   );
 });
 

@@ -4,11 +4,15 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { HeroBentoGrid } from "@/components/home/hero-bento-grid";
 import { getHeroSlide, heroLayouts } from "@/data/hero-slides";
 import { useHeroFlip } from "@/hooks/use-hero-flip";
+import { fetchProducts } from "@/lib/api/products";
+import { buildHeroSlideFromProduct } from "@/lib/hero-from-products";
 import { cn } from "@/lib/utils";
+import type { Product } from "@/types/product";
 
 export function HeroSection() {
   const [isDesktop, setIsDesktop] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [heroProducts, setHeroProducts] = useState<Product[]>([]);
 
   const onBeforeLayoutApply = useCallback((from: number, to: number) => {
     if (from === heroLayouts.length - 1 && to === 0) {
@@ -29,10 +33,35 @@ export function HeroSection() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  const slide = useMemo(
-    () => getHeroSlide(slideIndex, currentLayout),
-    [slideIndex, currentLayout],
-  );
+  useEffect(() => {
+    let cancelled = false;
+
+    fetchProducts("launch")
+      .then((products) => {
+        if (!cancelled) {
+          setHeroProducts(products.slice(0, 3));
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setHeroProducts([]);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const slide = useMemo(() => {
+    const product = heroProducts[slideIndex % heroProducts.length];
+
+    if (product) {
+      return buildHeroSlideFromProduct(slideIndex, currentLayout, product);
+    }
+
+    return getHeroSlide(slideIndex, currentLayout);
+  }, [slideIndex, currentLayout, heroProducts]);
 
   return (
     <section className="px-4 pt-6 lg:px-6 lg:pt-8">

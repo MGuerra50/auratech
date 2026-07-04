@@ -1,11 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/toast";
+import { formatPrice } from "@/lib/format-price";
 import { cn } from "@/lib/utils";
+import { getProductUnitPrice } from "@/data/products";
+import { useCartStore } from "@/store/cart-store";
 import type { Product } from "@/types/product";
 
 interface ProductCardProps {
@@ -14,11 +18,8 @@ interface ProductCardProps {
   featured?: boolean;
 }
 
-function formatPrice(price: number) {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  }).format(price);
+function getDefaultVariant(product: Product) {
+  return product.variants?.[0];
 }
 
 export function ProductCard({
@@ -27,8 +28,20 @@ export function ProductCard({
   featured = false,
 }: ProductCardProps) {
   const { showToast } = useToast();
+  const addItem = useCartStore((state) => state.addItem);
 
   const handleAdd = () => {
+    const variant = getDefaultVariant(product);
+
+    addItem({
+      productId: product.id,
+      title: product.title,
+      image: product.image,
+      unitPrice: getProductUnitPrice(product, variant?.id),
+      variantId: variant?.id,
+      variantLabel: variant?.label,
+    });
+
     showToast(`${product.title} adicionado ao carrinho`);
   };
 
@@ -39,9 +52,10 @@ export function ProductCard({
         className,
       )}
     >
-      <div
+      <Link
+        href={`/products/${product.id}`}
         className={cn(
-          "relative aspect-[4/3] overflow-hidden bg-surface-elevated",
+          "relative block aspect-[4/3] overflow-hidden bg-surface-elevated",
           featured && "aspect-[4/5] lg:aspect-auto lg:h-full lg:min-h-[320px]",
         )}
       >
@@ -61,18 +75,20 @@ export function ProductCard({
             Novo
           </Badge>
         )}
-      </div>
+      </Link>
 
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div className="flex-1">
           <p className="font-mono text-[10px] uppercase tracking-wider text-muted">
             {product.category}
           </p>
-          <h3 className="mt-1 font-medium text-foreground line-clamp-2">
-            {product.title}
-          </h3>
+          <Link href={`/products/${product.id}`}>
+            <h3 className="mt-1 font-medium text-foreground line-clamp-2 transition-colors hover:text-accent">
+              {product.title}
+            </h3>
+          </Link>
           <p className="mt-2 font-display text-lg font-semibold text-accent">
-            {formatPrice(product.price)}
+            {formatPrice(getProductUnitPrice(product))}
           </p>
         </div>
 

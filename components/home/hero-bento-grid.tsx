@@ -30,6 +30,7 @@ export const HeroBentoGrid = forwardRef<HTMLDivElement, HeroBentoGridProps>(
             title={block.id === "main" ? slide.title : undefined}
             subtitle={block.id === "main" ? slide.subtitle : undefined}
             ctaLabel={block.id === "main" ? slide.ctaLabel : undefined}
+            ctaHref={block.id === "main" ? slide.ctaHref : undefined}
           />
         ))}
       </div>
