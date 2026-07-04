@@ -13,12 +13,10 @@ const layoutClassMap: Record<HeroLayout, string> = {
 
 interface HeroBentoGridProps {
   slide: HeroSlide;
-  isPaused: boolean;
-  isActive: boolean;
 }
 
 export const HeroBentoGrid = forwardRef<HTMLDivElement, HeroBentoGridProps>(
-  function HeroBentoGrid({ slide, isPaused, isActive }, ref) {
+  function HeroBentoGrid({ slide }, ref) {
     return (
       <div
         ref={ref}
@@ -32,8 +30,6 @@ export const HeroBentoGrid = forwardRef<HTMLDivElement, HeroBentoGridProps>(
             title={block.id === "main" ? slide.title : undefined}
             subtitle={block.id === "main" ? slide.subtitle : undefined}
             ctaLabel={block.id === "main" ? slide.ctaLabel : undefined}
-            isPaused={isPaused}
-            isActive={isActive}
           />
         ))}
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { HeroBentoGrid } from "@/components/home/hero-bento-grid";
 import { getHeroSlide, heroLayouts } from "@/data/hero-slides";
 import { useHeroFlip } from "@/hooks/use-hero-flip";
@@ -9,17 +9,17 @@ import { cn } from "@/lib/utils";
 export function HeroSection() {
   const [isDesktop, setIsDesktop] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
-  const [hoverPaused, setHoverPaused] = useState(false);
-  const prevLayoutRef = useRef(0);
 
-  const {
-    layoutIndex,
-    currentLayout,
-    isTransitioning,
-    isPaused: visibilityPaused,
-    goToLayout,
-    containerRef,
-  } = useHeroFlip({ flipEnabled: isDesktop });
+  const onBeforeLayoutApply = useCallback((from: number, to: number) => {
+    if (from === heroLayouts.length - 1 && to === 0) {
+      setSlideIndex((current) => (current + 1) % 3);
+    }
+  }, []);
+
+  const { layoutIndex, currentLayout, goToLayout, containerRef } = useHeroFlip({
+    flipEnabled: isDesktop,
+    onBeforeLayoutApply,
+  });
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
@@ -29,34 +29,14 @@ export function HeroSection() {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  useEffect(() => {
-    const prev = prevLayoutRef.current;
-    if (prev === heroLayouts.length - 1 && layoutIndex === 0) {
-      setSlideIndex((current) => (current + 1) % 3);
-    }
-    prevLayoutRef.current = layoutIndex;
-  }, [layoutIndex]);
-
   const slide = useMemo(
     () => getHeroSlide(slideIndex, currentLayout),
     [slideIndex, currentLayout],
   );
 
-  const isPaused =
-    isTransitioning || visibilityPaused || hoverPaused;
-
   return (
-    <section
-      className="px-4 pt-6 lg:px-6 lg:pt-8"
-      onMouseEnter={() => setHoverPaused(true)}
-      onMouseLeave={() => setHoverPaused(false)}
-    >
-      <HeroBentoGrid
-        ref={containerRef}
-        slide={slide}
-        isPaused={isPaused}
-        isActive={!isTransitioning}
-      />
+    <section className="px-4 pt-6 lg:px-6 lg:pt-8">
+      <HeroBentoGrid ref={containerRef} slide={slide} />
 
       <div className="mt-4 flex items-center justify-center gap-2">
         {heroLayouts.map((layout, index) => (

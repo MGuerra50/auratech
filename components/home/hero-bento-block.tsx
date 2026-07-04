@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useHeroImageMotion } from "@/hooks/use-hero-image-motion";
 import { cn } from "@/lib/utils";
 import type { HeroBlockConfig } from "@/types/hero";
 
@@ -13,8 +12,6 @@ interface HeroBentoBlockProps {
   subtitle?: string;
   ctaLabel?: string;
   isMain?: boolean;
-  isPaused: boolean;
-  isActive: boolean;
 }
 
 export function HeroBentoBlock({
@@ -23,15 +20,7 @@ export function HeroBentoBlock({
   subtitle,
   ctaLabel,
   isMain = false,
-  isPaused,
-  isActive,
 }: HeroBentoBlockProps) {
-  const imageRef = useHeroImageMotion({
-    effect: block.imageEffect,
-    isPaused,
-    isActive,
-  });
-
   return (
     <article
       className="hero-block relative min-h-[160px] overflow-hidden rounded-2xl border border-border lg:min-h-0"
@@ -39,16 +28,14 @@ export function HeroBentoBlock({
       style={{ gridArea: block.gridArea }}
     >
       <div className="absolute inset-0 overflow-hidden">
-        <div ref={imageRef} className="absolute inset-0 h-full w-full">
-          <Image
-            src={block.image}
-            alt=""
-            fill
-            className="object-cover"
-            sizes={isMain ? "(max-width: 1024px) 100vw, 60vw" : "(max-width: 1024px) 50vw, 30vw"}
-            priority={isMain}
-          />
-        </div>
+        <Image
+          src={block.image}
+          alt=""
+          fill
+          className="object-cover"
+          sizes={isMain ? "(max-width: 1024px) 100vw, 60vw" : "(max-width: 1024px) 50vw, 30vw"}
+          priority={isMain}
+        />
       </div>
 
       <div
