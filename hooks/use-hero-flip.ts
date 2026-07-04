@@ -2,12 +2,15 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
+import { heroLayouts, HERO_LAYOUT_INDEX } from "@/data/hero-slides";
+import { resetHeroGridBlocks } from "@/lib/hero-grid-reset";
 import { Flip, gsap } from "@/lib/gsap";
 import type { HeroLayout } from "@/types/hero";
-import { heroLayouts } from "@/data/hero-slides";
 
 const SLIDE_DURATION = 5000;
 const FLIP_DURATION = 1.2;
+const FLIP_CLEAR_PROPS =
+  "transform,opacity,top,left,right,bottom,width,height,position,gridArea,gridColumn,gridRow,gridColumnStart,gridColumnEnd,gridRowStart,gridRowEnd,zIndex";
 
 interface UseHeroFlipOptions {
   flipEnabled: boolean;
@@ -21,6 +24,21 @@ interface UseHeroFlipReturn {
   isPaused: boolean;
   goToLayout: (index: number) => void;
   containerRef: React.RefObject<HTMLDivElement | null>;
+}
+
+function finishTransition(
+  container: HTMLElement | null,
+  isTransitioningRef: React.RefObject<boolean>,
+  setIsTransitioning: (value: boolean) => void,
+  scheduleAutoplay: () => void,
+) {
+  if (container) {
+    resetHeroGridBlocks(container);
+  }
+
+  isTransitioningRef.current = false;
+  setIsTransitioning(false);
+  scheduleAutoplay();
 }
 
 export function useHeroFlip({
@@ -52,6 +70,42 @@ export function useHeroFlip({
     }
   }, []);
 
+  const runStandardTransition = useCallback(
+    (fromIndex: number, nextIndex: number, container: HTMLElement) => {
+      const blocks = container.querySelectorAll(".hero-block");
+      const state = Flip.getState(blocks);
+
+      isTransitioningRef.current = true;
+      setIsTransitioning(true);
+
+      flushSync(() => {
+        onBeforeLayoutApplyRef.current?.(fromIndex, nextIndex);
+        layoutIndexRef.current = nextIndex;
+        setLayoutIndex(nextIndex);
+      });
+
+      Flip.from(state, {
+        targets: blocks,
+        duration: FLIP_DURATION,
+        ease: "power3.inOut",
+        absolute: true,
+        stagger: 0.05,
+        clearProps: FLIP_CLEAR_PROPS,
+        onComplete: () => {
+          requestAnimationFrame(() => {
+            finishTransition(
+              container,
+              isTransitioningRef,
+              setIsTransitioning,
+              scheduleAutoplayRef.current,
+            );
+          });
+        },
+      });
+    },
+    [],
+  );
+
   const runTransition = useCallback(
     (nextIndex: number) => {
       if (isTransitioningRef.current) return;
@@ -72,33 +126,9 @@ export function useHeroFlip({
         return;
       }
 
-      const blocks = container.querySelectorAll(".hero-block");
-      const state = Flip.getState(blocks);
-
-      isTransitioningRef.current = true;
-      setIsTransitioning(true);
-
-      flushSync(() => {
-        onBeforeLayoutApplyRef.current?.(fromIndex, nextIndex);
-        layoutIndexRef.current = nextIndex;
-        setLayoutIndex(nextIndex);
-      });
-
-      Flip.from(state, {
-        targets: blocks,
-        duration: FLIP_DURATION,
-        ease: "power3.inOut",
-        absolute: true,
-        stagger: 0.05,
-        onComplete: () => {
-          gsap.set(blocks, { clearProps: "transform" });
-          isTransitioningRef.current = false;
-          setIsTransitioning(false);
-          scheduleAutoplayRef.current();
-        },
-      });
+      runStandardTransition(fromIndex, nextIndex, container);
     },
-    [],
+    [runStandardTransition],
   );
 
   const scheduleAutoplay = useCallback(() => {
@@ -106,8 +136,7 @@ export function useHeroFlip({
     if (isPausedRef.current) return;
 
     timerRef.current = setTimeout(() => {
-      const next =
-        (layoutIndexRef.current + 1) % heroLayouts.length;
+      const next = (layoutIndexRef.current + 1) % heroLayouts.length;
       runTransition(next);
     }, SLIDE_DURATION);
   }, [clearTimer, runTransition]);
@@ -121,9 +150,19 @@ export function useHeroFlip({
       if (index === layoutIndexRef.current) return;
       clearTimer();
 
-      const blocks = containerRef.current?.querySelectorAll(".hero-block");
+      const container = containerRef.current;
+      const blocks = container?.querySelectorAll(".hero-block");
+      const clones = container?.querySelectorAll(".hero-split-clone");
+
       if (blocks && blocks.length > 0) {
         gsap.killTweensOf(blocks);
+      }
+      if (clones && clones.length > 0) {
+        gsap.killTweensOf(clones);
+      }
+
+      if (container) {
+        resetHeroGridBlocks(container);
       }
 
       isTransitioningRef.current = false;
@@ -137,6 +176,19 @@ export function useHeroFlip({
     scheduleAutoplay();
     return clearTimer;
   }, [scheduleAutoplay, clearTimer]);
+
+  useEffect(() => {
+    if (layoutIndex !== HERO_LAYOUT_INDEX.bottomSplit || isTransitioning) return;
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    const frame = requestAnimationFrame(() => {
+      resetHeroGridBlocks(container);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [layoutIndex, isTransitioning]);
 
   useEffect(() => {
     const handleVisibility = () => {

@@ -64,12 +64,16 @@ body {
 .hero-bento-grid {
   display: grid;
   gap: 0.75rem;
+  height: 420px;
   min-height: 420px;
+  overflow: hidden;
+  position: relative;
 }
 
 @media (min-width: 1024px) {
   .hero-bento-grid {
     gap: 1rem;
+    height: 520px;
     min-height: 520px;
   }
 }
@@ -91,12 +95,53 @@ body {
 }
 
 .hero-grid-bottomSplit {
-  grid-template:
-    "topFull" 200px
-    "mainSplit" 200px
-    "splitA" 140px
-    "splitB" 140px
-    / 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "top"
+    "main"
+    "bottomA";
+}
+
+.hero-grid-bottomSplit > .hero-block {
+  min-height: 0;
+}
+
+.hero-grid-bottomSplit > .hero-block[data-flip-id="main"] {
+  min-height: 200px;
+}
+
+/* Posicionamento via classe — imune a grid-area inline deixado pelo GSAP Flip */
+.hero-area-main {
+  grid-area: main;
+}
+
+.hero-area-topRight {
+  grid-area: topRight;
+}
+
+.hero-area-bottomRight {
+  grid-area: bottomRight;
+}
+
+.hero-area-topFull {
+  grid-area: topFull;
+}
+
+.hero-area-mainBottom {
+  grid-area: mainBottom;
+}
+
+.hero-area-bottomBottom {
+  grid-area: bottomBottom;
+}
+
+.hero-area-top {
+  grid-area: top;
+}
+
+.hero-area-bottomA {
+  grid-area: bottomA;
 }
 
 @media (min-width: 1024px) {
@@ -115,10 +160,18 @@ body {
   }
 
   .hero-grid-bottomSplit {
-    grid-template:
-      "topFull topFull" 1fr
-      "mainSplit splitA" 1fr
-      "mainSplit splitB" 1fr
-      / 1.5fr 1fr;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    grid-template-rows: minmax(0, 2fr) minmax(0, 3fr);
+    grid-template-areas:
+      "top top"
+      "main bottomA";
+  }
+
+  .hero-grid-bottomSplit > .hero-block {
+    height: 100%;
+  }
+
+  .hero-grid-bottomSplit > .hero-block[data-flip-id="main"] {
+    min-height: 0;
   }
 }

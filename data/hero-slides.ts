@@ -81,29 +81,22 @@ function getBlocksForLayout(
     {
       id: "topRight",
       image: `/hero/${prefix}-top.svg`,
-      gridArea: "topFull",
+      gridArea: "top",
       imageEffect: "panRight",
       label: "Destaque",
     },
     {
       id: "main",
       image: `/hero/${prefix}-main.svg`,
-      gridArea: "mainSplit",
+      gridArea: "main",
       imageEffect: "zoomIn",
     },
     {
-      id: "bottomSplitA",
+      id: "bottomRight",
       image: `/hero/${prefix}-bottom-a.svg`,
-      gridArea: "splitA",
+      gridArea: "bottomA",
       imageEffect: "zoomOut",
-      label: "A",
-    },
-    {
-      id: "bottomSplitB",
-      image: `/hero/${prefix}-bottom-b.svg`,
-      gridArea: "splitB",
-      imageEffect: "panRight",
-      label: "B",
+      label: "Novo",
     },
   ];
 }
@@ -113,6 +106,12 @@ export const heroLayouts: HeroLayout[] = [
   "topExpanded",
   "bottomSplit",
 ];
+
+export const HERO_LAYOUT_INDEX = {
+  initial: 0,
+  topExpanded: 1,
+  bottomSplit: 2,
+} as const;
 
 export function getHeroSlide(
   slideIndex: number,

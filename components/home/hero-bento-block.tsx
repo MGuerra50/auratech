@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { heroGridAreaClass } from "@/lib/hero-grid-areas";
 import type { HeroBlockConfig } from "@/types/hero";
 
 interface HeroBentoBlockProps {
@@ -12,6 +13,7 @@ interface HeroBentoBlockProps {
   subtitle?: string;
   ctaLabel?: string;
   isMain?: boolean;
+  className?: string;
 }
 
 export function HeroBentoBlock({
@@ -20,12 +22,18 @@ export function HeroBentoBlock({
   subtitle,
   ctaLabel,
   isMain = false,
+  className,
 }: HeroBentoBlockProps) {
   return (
     <article
-      className="hero-block relative min-h-[160px] overflow-hidden rounded-2xl border border-border lg:min-h-0"
+      className={cn(
+        "hero-block relative min-h-[160px] overflow-hidden rounded-2xl border border-border lg:min-h-0",
+        heroGridAreaClass(block.gridArea),
+        className,
+      )}
       data-flip-id={block.id}
-      style={{ gridArea: block.gridArea }}
+      data-image={block.image}
+      data-grid-area={block.gridArea}
     >
       <div className="absolute inset-0 overflow-hidden">
         <Image

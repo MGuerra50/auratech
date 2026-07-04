@@ -1,9 +1,4 @@
-export type HeroBlockId =
-  | "main"
-  | "topRight"
-  | "bottomRight"
-  | "bottomSplitA"
-  | "bottomSplitB";
+export type HeroBlockId = "main" | "topRight" | "bottomRight";
 
 export type HeroLayout = "initial" | "topExpanded" | "bottomSplit";
 
