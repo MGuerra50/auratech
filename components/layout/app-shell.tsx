@@ -17,9 +17,9 @@ export function AppShell({ children }: AppShellProps) {
     <div className="flex min-h-screen">
       <Sidebar />
 
-      <div className="flex min-h-screen flex-1 flex-col">
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col">
         <Header onMobileNavOpen={() => setIsMobileNavOpen(true)} />
-        <main className="flex flex-1 flex-col">{children}</main>
+        <main className="flex min-w-0 flex-1 flex-col overflow-x-hidden">{children}</main>
       </div>
 
       <CartDrawer />

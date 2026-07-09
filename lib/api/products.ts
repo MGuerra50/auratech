@@ -1,7 +1,13 @@
-import type { ProductResponse, ProductsResponse } from "@/types/api";
+import type {
+  PaginatedProductsResponse,
+  ProductResponse,
+  ProductsResponse,
+} from "@/types/api";
 import type { Product } from "@/types/product";
 
 type ProductFilter = "launch" | "featured";
+
+const PAGE_SIZE = 25;
 
 async function parseJson<T>(response: Response): Promise<T> {
   if (!response.ok) {
@@ -28,4 +34,20 @@ export async function fetchProductById(id: string): Promise<Product> {
   );
 
   return data.product;
+}
+
+export async function fetchProductsByCategory(
+  categorySlug: string,
+  offset = 0,
+  limit = PAGE_SIZE,
+): Promise<PaginatedProductsResponse> {
+  const params = new URLSearchParams({
+    category: categorySlug,
+    offset: String(offset),
+    limit: String(limit),
+  });
+
+  return parseJson<PaginatedProductsResponse>(
+    await fetch(`/api/products?${params.toString()}`),
+  );
 }

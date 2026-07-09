@@ -1,16 +1,18 @@
+import {
+  DEFAULT_PRODUCT_IMAGE,
+  DEFAULT_PRODUCT_IMAGES,
+} from "@/lib/product-images";
 import type { Product } from "@/types/product";
+
+const productImages = [...DEFAULT_PRODUCT_IMAGES];
 
 export const products: Product[] = [
   {
     id: "monitor-ultrawide",
     title: "Monitor Ultrawide 34\" Curvo",
     price: 4299,
-    image: "/products/monitor-ultrawide.svg",
-    images: [
-      "/products/monitor-ultrawide.svg",
-      "/products/monitor-ultrawide-2.svg",
-      "/products/monitor-ultrawide-3.svg",
-    ],
+    image: DEFAULT_PRODUCT_IMAGE,
+    images: productImages,
     category: "Monitores",
     description:
       "Painel VA curvo 3440×1440 com 165Hz, HDR400 e design frameless para setups imersivos e produtividade multitarefa.",
@@ -30,12 +32,8 @@ export const products: Product[] = [
     id: "teclado-custom",
     title: "Teclado Mecânico Custom TKL",
     price: 1899,
-    image: "/products/teclado-custom.svg",
-    images: [
-      "/products/teclado-custom.svg",
-      "/products/teclado-custom-2.svg",
-      "/products/teclado-custom-3.svg",
-    ],
+    image: DEFAULT_PRODUCT_IMAGE,
+    images: productImages,
     category: "Teclados",
     description:
       "Layout TKL hot-swap com case de alumínio usinado, plate flex e acabamento premium para digitação silenciosa e responsiva.",
@@ -57,12 +55,8 @@ export const products: Product[] = [
     id: "cadeira-ergonomica",
     title: "Cadeira Ergonômica Pro",
     price: 3499,
-    image: "/products/cadeira-ergonomica.svg",
-    images: [
-      "/products/cadeira-ergonomica.svg",
-      "/products/cadeira-ergonomica-2.svg",
-      "/products/cadeira-ergonomica-3.svg",
-    ],
+    image: DEFAULT_PRODUCT_IMAGE,
+    images: productImages,
     category: "Cadeiras",
     description:
       "Suporte lombar ajustável, apoio de braço 4D e recline sincronizado para longas sessões de trabalho com conforto absoluto.",
@@ -82,12 +76,8 @@ export const products: Product[] = [
     id: "desk-mat",
     title: "Desk Mat Premium XL",
     price: 349,
-    image: "/products/desk-mat.svg",
-    images: [
-      "/products/desk-mat.svg",
-      "/products/desk-mat-2.svg",
-      "/products/desk-mat-3.svg",
-    ],
+    image: DEFAULT_PRODUCT_IMAGE,
+    images: productImages,
     category: "Acessórios",
     description:
       "Superfície micro-texturizada antiderrapante com costura reforçada e dimensões XL para mouse e teclado full-size.",
@@ -107,12 +97,8 @@ export const products: Product[] = [
     id: "webcam-4k",
     title: "Webcam 4K Pro Stream",
     price: 899,
-    image: "/products/webcam-4k.svg",
-    images: [
-      "/products/webcam-4k.svg",
-      "/products/webcam-4k-2.svg",
-      "/products/webcam-4k-3.svg",
-    ],
+    image: DEFAULT_PRODUCT_IMAGE,
+    images: productImages,
     category: "Acessórios",
     description:
       "Sensor 4K com autofoco rápido, HDR e microfone dual para streams e reuniões com qualidade profissional.",
@@ -127,12 +113,8 @@ export const products: Product[] = [
     id: "headphone-stand",
     title: "Suporte de Headphone Alumínio",
     price: 279,
-    image: "/products/headphone-stand.svg",
-    images: [
-      "/products/headphone-stand.svg",
-      "/products/headphone-stand-2.svg",
-      "/products/headphone-stand-3.svg",
-    ],
+    image: DEFAULT_PRODUCT_IMAGE,
+    images: productImages,
     category: "Acessórios",
     description:
       "Construção em alumínio anodizado com base antiderrapante e gancho ergonômico para manter fones organizados.",
@@ -147,12 +129,8 @@ export const products: Product[] = [
     id: "monitor-arm",
     title: "Braço Articulado Duplo",
     price: 649,
-    image: "/products/monitor-arm.svg",
-    images: [
-      "/products/monitor-arm.svg",
-      "/products/monitor-arm-2.svg",
-      "/products/monitor-arm.svg",
-    ],
+    image: DEFAULT_PRODUCT_IMAGE,
+    images: productImages,
     category: "Acessórios",
     description:
       "Suporte VESA duplo com mola a gás, ajuste de altura e rotação para liberar espaço na mesa e melhorar ergonomia.",
@@ -171,12 +149,8 @@ export const products: Product[] = [
     id: "led-strip",
     title: "Fitas LED RGB Ambient",
     price: 199,
-    image: "/products/led-strip.svg",
-    images: [
-      "/products/led-strip.svg",
-      "/products/led-strip-2.svg",
-      "/products/led-strip-3.svg",
-    ],
+    image: DEFAULT_PRODUCT_IMAGE,
+    images: productImages,
     category: "Iluminação",
     description:
       "Iluminação ambiente RGB endereçável com controle por app, difusor integrado e instalação adesiva premium.",

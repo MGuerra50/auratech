@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
+import { DEFAULT_PRODUCT_IMAGE } from "@/lib/product-images";
 import { cn } from "@/lib/utils";
 
 interface ProductGalleryProps {
@@ -12,7 +13,7 @@ interface ProductGalleryProps {
 
 export function ProductGallery({ images, title }: ProductGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const galleryImages = images.length > 0 ? images : ["/products/monitor-ultrawide.svg"];
+  const galleryImages = images.length > 0 ? images : [DEFAULT_PRODUCT_IMAGE];
 
   const goToPrevious = useCallback(() => {
     setSelectedIndex((current) =>

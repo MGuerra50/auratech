@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import {
   getAllProducts,
   getProductById,
+  getProductsByCategorySlug,
   getProductsByFilter,
   type ProductFilter,
 } from "@/lib/products";
@@ -12,6 +13,9 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
   const filter = searchParams.get("filter");
+  const category = searchParams.get("category");
+  const offset = Number.parseInt(searchParams.get("offset") ?? "0", 10);
+  const limit = Number.parseInt(searchParams.get("limit") ?? "25", 10);
 
   if (id) {
     const product = getProductById(id);
@@ -24,6 +28,19 @@ export async function GET(request: Request) {
     }
 
     return NextResponse.json({ product });
+  }
+
+  if (category) {
+    const result = getProductsByCategorySlug(category, offset, limit);
+
+    if (!result) {
+      return NextResponse.json(
+        { error: "Categoria não encontrada" },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json(result);
   }
 
   if (filter) {
